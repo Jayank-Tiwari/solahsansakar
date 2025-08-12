@@ -1,4 +1,6 @@
-<x-layouts.app>
+@extends('layouts.app')
+
+@section('content')
     <div class="bg-ss-cream py-16">
         <div class="container mx-auto px-6">
             <div class="text-center mb-12">
@@ -11,7 +13,7 @@
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col group">
                         <div class="relative">
                             <div class="bg-gray-200 h-48 flex items-center justify-center">
-                                <span class="text-gray-500">[Featured Image]</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v4a1 1 0 001 1h3v4a1 1 0 001 1h4a1 1 0 001-1v-4h3a1 1 0 001-1V7a1 1 0 00-1-1H4a1 1 0 00-1 1z" /></svg>
                             </div>
                             <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
@@ -19,7 +21,7 @@
                         <div class="p-6 flex-grow flex flex-col">
                             <div class="mb-4">
                                 @foreach ($post->tags as $tag)
-                                    <span class="inline-block bg-ss-saffron/20 text-ss-brown text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">{{ $tag->name }}</span>
+                                    <span class="inline-block bg-ss-saffron/20 text-ss-brown text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full shadow">{{ $tag->name }}</span>
                                 @endforeach
                             </div>
                             <h2 class="text-xl font-serif text-ss-maroon mb-2 flex-grow">
@@ -47,4 +49,4 @@
             </div>
         </div>
     </div>
-</x-layouts.app>
+@endsection

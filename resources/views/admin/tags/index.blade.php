@@ -9,11 +9,12 @@
                     @csrf
                     <div>
                         <label for="name" class="block font-medium text-gray-700">Tag Name</label>
-                        <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                        <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 transition duration-200" required>
                         @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div class="mt-4">
-                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">
+                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                             Save Tag
                         </button>
                     </div>
@@ -33,14 +34,17 @@
                     </thead>
                     <tbody>
                         @forelse ($tags as $tag)
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3">{{ $tag->name }}</td>
+                            <tr class="border-b hover:bg-blue-50 transition duration-200">
+                                <td class="p-3 font-semibold">{{ $tag->name }}</td>
                                 <td class="p-3 text-center">{{ $tag->posts_count }}</td>
-                                <td class="p-3 text-right">
+                                <td class="p-3 text-right flex items-center justify-end space-x-2">
                                     <form action="{{ route('admin.tags.destroy', $tag) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this tag?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                                        <button type="submit" class="text-red-500 hover:underline transition duration-200" title="Delete">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                            Delete
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

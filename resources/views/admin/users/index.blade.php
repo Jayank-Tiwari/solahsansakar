@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                     @forelse ($users as $user)
-                        <tr class="border-b hover:bg-gray-50">
+                        <tr class="border-b hover:bg-blue-50 transition duration-200">
                             <td class="p-3 font-bold">{{ $user->name }}</td>
                             <td class="p-3 text-gray-600">{{ $user->email }}</td>
                             <td class="p-3">
@@ -26,7 +26,9 @@
                                     {{ $user->role }}
                                 </span>
                             </td>
-                            <td class="p-3 text-center">{{ $user->bookings_count }}</td>
+                            <td class="p-3 text-center">
+                                <span class="px-2 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800">{{ $user->bookings_count }}</span>
+                            </td>
                             <td class="p-3 text-sm text-gray-500">{{ $user->created_at->format('M d, Y') }}</td>
                         </tr>
                     @empty

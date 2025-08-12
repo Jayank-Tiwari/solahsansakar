@@ -19,8 +19,8 @@
             </thead>
             <tbody>
                 @foreach ($poojas as $pooja)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="py-3">{{ $pooja->title }}</td>
+                    <tr class="border-b hover:bg-blue-50 transition duration-200">
+                        <td class="py-3 font-semibold">{{ $pooja->title }}</td>
                         <td class="py-3">₹{{ $pooja->price_pandit_only / 100 }}</td>
                         <td class="py-3">
                             <span
@@ -28,14 +28,20 @@
                                 {{ $pooja->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
-                        <td class="py-3 text-right">
+                        <td class="py-3 text-right flex items-center justify-end space-x-2">
                             <a href="{{ route('admin.poojas.edit', $pooja) }}"
-                                class="text-blue-500 hover:underline mr-4">Edit</a>
+                                class="text-blue-500 hover:underline transition duration-200" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-1 0v14m-7-7h14" /></svg>
+                                Edit
+                            </a>
                             <form action="{{ route('admin.poojas.destroy', $pooja) }}" method="POST" class="inline"
                                 onsubmit="return confirm('Are you sure you want to delete this pooja?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                                <button type="submit" class="text-red-500 hover:underline transition duration-200" title="Delete">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                    Delete
+                                </button>
                             </form>
                         </td>
                     </tr>

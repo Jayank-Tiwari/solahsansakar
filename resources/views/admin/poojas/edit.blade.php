@@ -8,7 +8,7 @@
 
             <div class="md:col-span-2">
                 <label for="title" class="block font-semibold text-gray-700">Title</label>
-                <input type="text" name="title" id="title" class="mt-1 block w-full rounded-md" value="{{ old('title', $pooja->title) }}" required>
+                <input type="text" name="title" id="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 transition duration-200" value="{{ old('title', $pooja->title) }}" required>
             </div>
 
             <div class="mt-4">
@@ -19,11 +19,11 @@
                     <p>No image uploaded.</p>
                 @endif
                 <label for="image" class="block font-semibold text-gray-700 mt-4">Upload New Image (optional)</label>
-                <input type="file" name="image" id="image" class="mt-1 block w-full">
+                <input type="file" name="image" id="image" class="mt-1 block w-full focus:ring-2 focus:ring-blue-400 transition duration-200">
             </div>
 
             <div class="mt-6">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">Update Pooja</button>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg transition duration-200">Update Pooja</button>
             </div>
         </form>
     </div>

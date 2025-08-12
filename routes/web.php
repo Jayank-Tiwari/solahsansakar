@@ -33,9 +33,8 @@ Route::resource('tags', TagController::class);
 Route::get('/pooja-packages', [PoojaController::class, 'index'])->name('packages.index');
 
 // Homepage Route
-Route::get('/', function () {
-    return view('home'); // We will create this view next
-})->name('home');
+use App\Http\Controllers\HomeController;
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Guest-only routes
 Route::middleware('guest')->group(function () {

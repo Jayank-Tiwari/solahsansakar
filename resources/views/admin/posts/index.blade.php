@@ -18,17 +18,20 @@
             </thead>
             <tbody>
                 @foreach ($posts as $post)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="py-3">{{ $post->title }}</td>
+                    <tr class="border-b hover:bg-blue-50 transition duration-200">
+                        <td class="py-3 font-semibold">{{ $post->title }}</td>
                         <td class="py-3">{{ $post->author->name }}</td>
                         <td class="py-3 capitalize">
                             <span class="px-2 py-1 text-xs font-bold rounded-full {{ $post->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                 {{ $post->status }}
                             </span>
                         </td>
-                        <td class="py-3 text-right">
-                            <a href="{{ route('admin.posts.edit', $post) }}" class="text-blue-500 hover:underline mr-4">Edit</a>
-                            </td>
+                        <td class="py-3 text-right flex items-center justify-end space-x-2">
+                            <a href="{{ route('admin.posts.edit', $post) }}" class="text-blue-500 hover:underline transition duration-200" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-1 0v14m-7-7h14" /></svg>
+                                Edit
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
