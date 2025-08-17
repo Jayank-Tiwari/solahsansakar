@@ -33,6 +33,9 @@ jobs:
         if: steps.check_files.outputs.files_exists == 'true'
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
+      - name: Zip the application files
+        run: |
+          zip -r php-app.zip . -x ".git*" "vendor/*" "node_modules/*" "storage/*" "public/storage/*" "public/uploads/*" "public/cache/*" ".env.example"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -52,7 +55,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: php-app
-      
+      - name: Unzip the application files
+        run: |
+          unzip php-app.zip -d php-app
+          cd php-app
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
