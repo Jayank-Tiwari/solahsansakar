@@ -33,9 +33,6 @@ jobs:
         if: steps.check_files.outputs.files_exists == 'true'
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
-      - name: Zip the application files
-        run: |
-          zip -r php-app.zip . -x ".git*" "vendor/*" "node_modules/*" "storage/*" "public/storage/*" "public/uploads/*" "public/cache/*" ".env.example"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -55,17 +52,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: php-app
-      - name: Unzip the application files
-        run: |
-          unzip php-app.zip -d php-app
-          cd php-app
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.__clientidsecretname__ }}
-          tenant-id: ${{ secrets.__tenantidsecretname__ }}
-          subscription-id: ${{ secrets.__subscriptionidsecretname__ }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6D14763561364FC28617B2A4590D5D8D }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_18BB2CE03E39431BA633461BFD7C0D41 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2A86333AE2654495A328920A8B06AACF }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
