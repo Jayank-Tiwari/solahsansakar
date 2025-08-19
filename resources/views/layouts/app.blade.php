@@ -72,6 +72,29 @@
                 </button>
             </div>
         </div>
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
+            <nav class="flex flex-col space-y-2">
+                <a href="{{ route('home') }}" class="hover:text-ss-saffron transition font-semibold">Home</a>
+                <a href="{{ route('packages.index') }}" class="hover:text-ss-saffron transition font-semibold">Pooja Packages</a>
+                <a href="{{ route('blogs.index') }}" class="hover:text-ss-saffron transition font-semibold">Blogs</a>
+                <a href="#" class="hover:text-ss-saffron transition font-semibold">Contact</a>
+                @guest
+                    <a href="{{ route('login') }}"
+                        class="px-4 py-2 rounded-md text-ss-maroon border border-ss-maroon hover:bg-ss-maroon hover:text-white transition font-semibold">Login</a>
+                    <a href="{{ route('register') }}"
+                        class="px-4 py-2 rounded-md bg-ss-saffron text-white hover:bg-orange-600 transition font-semibold">Register</a>
+                @endguest
+                @auth
+                    <a href="{{ route('dashboard') }}"
+                        class="hover:text-ss-saffron transition font-semibold">{{ auth()->user()->name }}</a>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="ml-4 hover:text-ss-saffron transition font-semibold">Logout</button>
+                    </form>
+                @endauth
+            </nav>
+        </div>
     </header>
 
     <!-- Page Content -->
