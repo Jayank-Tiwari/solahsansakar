@@ -6,7 +6,7 @@
     <div class="relative bg-ss-cream pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
         <!-- Background Image with Overlay -->
         <div class="absolute inset-0">
-            <img class="h-full w-full object-cover" src="https://images.unsplash.com/photo-1610700813022-d34bd2539956?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1920" alt="Indian Pooja Ceremony">
+            <img class="h-full w-full object-cover" src="{{ asset('assets/background.png') }}" alt="Indian Pooja Ceremony">
             <div class="absolute inset-0 bg-ss-maroon/60 mix-blend-multiply"></div>
         </div>
         <div class="relative max-w-7xl mx-auto py-24 text-center">

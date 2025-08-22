@@ -32,7 +32,20 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'pooja_id' => 'required|exists:poojas,id',
+        ]);
+
+        Booking::create([
+            'user_id' => auth()->id(),
+            'pooja_id' => $validated['pooja_id'],
+            'booking_type' => 'pandit_only', // Default for this simple form
+            'booking_date' => now()->addDays(7), // Placeholder date
+            'address' => 'User needs to provide this', // Placeholder address
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('user.bookings')->with('success', 'Your pooja has been booked successfully! We will contact you for details.');
     }
 
     /**

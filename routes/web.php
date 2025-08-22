@@ -1,42 +1,42 @@
 <?php
 
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\TagController;
-use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
+// --- Public Controllers ---
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PoojaController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AuthController;
 
-use App\Http\Controllers\PoojaController;
+// --- User Controllers ---
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\BookingController;
+
+// --- Admin Controllers ---
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PoojaController as AdminPoojaController;
-// Inside the admin route group
-use App\Http\Controllers\BlogController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\UserController;
 
-// ... your other routes ...
 
+/*
+|--------------------------------------------------------------------------
+| Public Routes (Accessible to Everyone)
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/pooja-packages', [PoojaController::class, 'index'])->name('packages.index');
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/{post:slug}', [BlogController::class, 'show'])->name('blogs.show');
 
-// Admin Route Group
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('bookings', BookingController::class);
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('poojas', AdminPoojaController::class);
-    // Inside the admin route group
-Route::resource('tags', TagController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('posts', PostController::class);
-});
 
-Route::get('/pooja-packages', [PoojaController::class, 'index'])->name('packages.index');
-
-// Homepage Route
-use App\Http\Controllers\HomeController;
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Guest-only routes
+/*
+|--------------------------------------------------------------------------
+| Guest-Only Routes (For Unauthenticated Users)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('guest')->group(function () {
     Route::get('register', [AuthController::class, 'registerForm'])->name('register');
     Route::post('register', [AuthController::class, 'register']);
@@ -44,10 +44,39 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 });
 
-// Authenticated-only routes
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated User Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/my-bookings', [UserDashboardController::class, 'bookings'])->name('user.bookings');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes (Protected for Admins Only)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('poojas', AdminPoojaController::class);
+    Route::resource('bookings', AdminBookingController::class);
+    Route::resource('posts', AdminPostController::class);
+    Route::resource('tags', TagController::class);
+    Route::resource('users', UserController::class);
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| General Authenticated Route (Logout)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('dashboard', function () {
-        return view('dashboard'); // We will create this view next
-    })->name('dashboard');
 });
