@@ -4,7 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'SolahSansakar')</title>
+    {{-- SEO Meta --}}
+    <title>@yield('meta_title', 'SolahSansakar')</title>
+    <meta name="description" content="@yield('meta_description', 'Spiritual insights and Vedic traditions.')">
+    <meta property="og:title" content="@yield('meta_title', 'SolahSansakar')" />
+    <meta property="og:description" content="@yield('meta_description', 'Spiritual insights and Vedic traditions.')" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:image" content="@yield('meta_image', asset('assets/default-og.png'))" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

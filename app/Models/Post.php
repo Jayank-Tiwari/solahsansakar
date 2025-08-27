@@ -19,6 +19,21 @@ class Post extends Model
     protected $guarded = [];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'excerpt',
+        'body',
+        'slug',
+        'user_id',
+        'status',
+        'featured_image_url',
+    ];
+
+    /**
      * Defines the many-to-many relationship with Tag.
      */
     public function tags(): BelongsToMany

@@ -40,12 +40,18 @@ class PostController extends Controller
             'tags' => 'nullable|array'
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
-        $validated['user_id'] = auth()->id();
-        $validated['status'] = 'published'; // Or get from form input
+        $postData = $validated;
+        unset($postData['tags']); // Remove 'tags' from the array
 
-        $post = Post::create($validated);
-        $post->tags()->attach($request->tags);
+        $postData['slug'] = Str::slug($validated['title']);
+        $postData['user_id'] = auth()->id();
+        $postData['status'] = 'published'; // Or get from form input
+
+        $post = Post::create($postData); // Only insert columns that exist
+
+        if ($request->filled('tags')) {
+            $post->tags()->attach($request->tags); // Attach tags via pivot table
+        }
 
         return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
     }
@@ -75,9 +81,27 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'excerpt' => 'required|string',
+            'body' => 'required|string',
+            'tags' => 'nullable|array',
+            'status' => 'required|in:draft,published',
+        ]);
+
+        $postData = $validated;
+        unset($postData['tags']);
+
+        $postData['slug'] = \Illuminate\Support\Str::slug($validated['title']);
+
+        $post->update($postData);
+
+        // Sync tags
+        $post->tags()->sync($request->tags ?? []);
+
+        return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
 
     /**

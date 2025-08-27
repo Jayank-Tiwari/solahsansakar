@@ -29,6 +29,11 @@ class BlogController extends Controller
             abort(404);
         }
 
-        return view('blogs.show', ['post' => $post]);
+        return view('blogs.show', [
+            'post' => $post,
+            'meta_title' => $post->title,
+            'meta_description' => $post->excerpt,
+            'meta_image' => $post->featured_image_url ?? asset('assets/default-og.png'),
+        ]);
     }
 }

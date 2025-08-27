@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('meta_title', $meta_title ?? $post->title)
+@section('meta_description', $meta_description ?? $post->excerpt)
+@section('meta_image', $meta_image ?? asset('assets/default-og.png'))
+
 @section('content')
     <div class="bg-white py-16">
         <div class="container mx-auto px-6">
