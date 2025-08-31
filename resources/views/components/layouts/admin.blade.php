@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - SolahSansakar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Your custom Tailwind config can go here if needed
-    </script>
 </head>
 
 <body class="bg-gray-100">

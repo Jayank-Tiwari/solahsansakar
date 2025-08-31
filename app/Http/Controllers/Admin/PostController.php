@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
@@ -24,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        $tags = \App\Models\Tag::all();
+        $tags = Tag::all();
         return view('admin.posts.create', ['tags' => $tags]);
     }
 
@@ -37,7 +39,8 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'excerpt' => 'required|string',
             'body' => 'required|string',
-            'tags' => 'nullable|array'
+            'tags' => 'nullable|array',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024', // 1MB max
         ]);
 
         $postData = $validated;
@@ -46,6 +49,25 @@ class PostController extends Controller
         $postData['slug'] = Str::slug($validated['title']);
         $postData['user_id'] = auth()->id();
         $postData['status'] = 'published'; // Or get from form input
+
+        // Handle image upload
+        if ($request->hasFile('featured_image')) {
+            $image = $request->file('featured_image');
+            $filename = 'post_' . time() . '.' . $image->getClientOriginalExtension();
+
+            // Resize and optimize
+            $img = Image::make($image)
+                ->resize(1200, 800, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('jpg', 80); // 80% quality for fast load
+
+            // Save to storage/app/public/posts
+            \Storage::disk('public')->put('posts/' . $filename, $img);
+
+            $postData['featured_image_url'] = 'storage/posts/' . $filename;
+        }
 
         $post = Post::create($postData); // Only insert columns that exist
 
@@ -89,12 +111,37 @@ class PostController extends Controller
             'body' => 'required|string',
             'tags' => 'nullable|array',
             'status' => 'required|in:draft,published',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024', // 1MB max
         ]);
 
         $postData = $validated;
         unset($postData['tags']);
 
-        $postData['slug'] = \Illuminate\Support\Str::slug($validated['title']);
+        $postData['slug'] = Str::slug($validated['title']);
+
+        // Handle image upload and removal of old image
+        if ($request->hasFile('featured_image')) {
+            // Delete old image if exists
+            if ($post->featured_image_url && Storage::disk('public')->exists(str_replace('storage/', '', $post->featured_image_url))) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $post->featured_image_url));
+            }
+
+            $image = $request->file('featured_image');
+            $filename = 'post_' . time() . '.' . $image->getClientOriginalExtension();
+
+            // Resize and optimize
+            $img = Image::make($image)
+                ->resize(1200, 800, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('jpg', 80); // 80% quality for fast load
+
+            // Save to storage/app/public/posts
+            \Storage::disk('public')->put('posts/' . $filename, $img);
+
+            $postData['featured_image_url'] = 'storage/posts/' . $filename;
+        }
 
         $post->update($postData);
 

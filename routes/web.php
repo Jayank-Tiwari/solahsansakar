@@ -15,7 +15,6 @@ use App\Http\Controllers\BookingController;
 // --- Admin Controllers ---
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PoojaController as AdminPoojaController;
-use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
@@ -65,7 +64,7 @@ Route::middleware(['auth', 'user'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('poojas', AdminPoojaController::class);
-    Route::resource('bookings', AdminBookingController::class);
+    Route::resource('bookings', BookingController::class);
     Route::resource('posts', AdminPostController::class);
     Route::resource('tags', TagController::class);
     Route::resource('users', UserController::class);
