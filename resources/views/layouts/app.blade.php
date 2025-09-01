@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="utf-8">
@@ -57,12 +57,19 @@
                 <a href="#" class="nav-link">Contact</a>
             </nav>
             <div class="hidden md:flex items-center space-x-4">
+                <!-- Language Switcher -->
+                <form method="POST" action="{{ route('setLocale') }}">
+                    @csrf
+                    <select name="locale" onchange="this.form.submit()">
+                        <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>English</option>
+                        <option value="hi" {{ app()->getLocale() === 'hi' ? 'selected' : '' }}>हिन्दी</option>
+                    </select>
+                </form>
                 @guest
                     <a href="{{ route('login') }}" class="btn-outline">Login</a>
                     <a href="{{ route('register') }}" class="btn-primary">Register</a>
                 @endguest
                 @auth
-                    {{-- CORRECTED DYNAMIC LINK --}}
                     <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
                         class="nav-link">{{ auth()->user()->name }}</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -71,7 +78,7 @@
                     </form>
                 @endauth
             </div>
-            <button id="mobile-menu-btn" class="md:hidden text-ss-maroon focus:outline-none" aria-label="Open menu">
+            <button id="mobile-menu-btn" class="md:hidden text-ss-maroon focus:outline-none" aria-label="Open menu">    
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -81,6 +88,13 @@
         <div id="mobile-menu"
             class="md:hidden fixed top-16 left-0 w-full bg-white/95 shadow-lg border-t border-ss-cream transition-all duration-300 ease-in-out hidden">
             <nav class="flex flex-col space-y-2 px-6 py-4">
+                <form method="POST" action="{{ route('setLocale') }}" class="mb-2">
+                    @csrf
+                    <select name="locale" onchange="this.form.submit()" class="border rounded px-2 py-1 text-sm font-semibold text-ss-maroon bg-white focus:outline-none focus:ring-2 focus:ring-ss-saffron w-full">
+                        <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>English</option>
+                        <option value="hi" {{ app()->getLocale() === 'hi' ? 'selected' : '' }}>हिन्दी</option>
+                    </select>
+                </form>
                 <a href="{{ route('home') }}" class="nav-link-mobile">Home</a>
                 <a href="{{ route('packages.index') }}" class="nav-link-mobile">Pooja Packages</a>
                 <a href="{{ route('blogs.index') }}" class="nav-link-mobile">Blogs</a>
@@ -90,7 +104,6 @@
                     <a href="{{ route('register') }}" class="btn-primary w-full mt-2">Register</a>
                 @endguest
                 @auth
-                    {{-- CORRECTED DYNAMIC LINK --}}
                     <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
                         class="nav-link-mobile">{{ auth()->user()->name }}</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">

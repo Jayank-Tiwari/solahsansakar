@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Pooja;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -22,9 +23,10 @@ class BookingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Pooja $pooja)
     {
-        //
+        $otherPoojas = Pooja::where('id', '!=', $pooja->id)->take(4)->get();
+        return view('bookings.create', compact('pooja', 'otherPoojas'));
     }
 
     /**
@@ -34,18 +36,25 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'pooja_id' => 'required|exists:poojas,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:20',
         ]);
+
+        $pooja = Pooja::findOrFail($validated['pooja_id']);
+        $total = ($pooja->price_samagri + $pooja->price_pandit_only);
 
         Booking::create([
+            'pooja_id' => $pooja->id,
             'user_id' => auth()->id(),
-            'pooja_id' => $validated['pooja_id'],
-            'booking_type' => 'pandit_only', // Default for this simple form
-            'booking_date' => now()->addDays(7), // Placeholder date
-            'address' => 'User needs to provide this', // Placeholder address
-            'status' => 'pending',
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'amount' => $total,
+            // Add other fields as needed
         ]);
 
-        return redirect()->route('user.bookings')->with('success', 'Your pooja has been booked successfully! We will contact you for details.');
+        return redirect()->route('user.bookings')->with('success', 'Booking confirmed!');
     }
 
     /**

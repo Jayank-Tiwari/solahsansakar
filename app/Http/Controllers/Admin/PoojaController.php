@@ -34,20 +34,40 @@ class PoojaController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_hi' => 'nullable|string|max:255',
             'description' => 'required|string',
+            'description_hi' => 'nullable|string',
+            'brief_description' => 'nullable|string|max:255',
+            'brief_description_hi' => 'nullable|string|max:255',
             'price_pandit_samagri' => 'required|integer|min:0',
             'price_pandit_only' => 'required|integer|min:0',
             'price_samagri_only' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'hero_banner' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
+        $data = [
+            'title' => $validated['title'],
+            'title_hi' => $validated['title_hi'] ?? null,
+            'description' => $validated['description'],
+            'description_hi' => $validated['description_hi'] ?? null,
+            'brief_description' => $validated['brief_description'] ?? null,
+            'brief_description_hi' => $validated['brief_description_hi'] ?? null,
+            'price_pandit_samagri' => $validated['price_pandit_samagri'],
+            'price_pandit_only' => $validated['price_pandit_only'],
+            'price_samagri_only' => $validated['price_samagri_only'],
+            'slug' => Str::slug($validated['title']),
+        ];
 
         if ($request->hasFile('image')) {
-            $validated['image_path'] = $request->file('image')->store('poojas', 'public');
+            $data['image_path'] = $request->file('image')->store('poojas', 'public');
         }
 
-        Pooja::create($validated);
+        if ($request->hasFile('hero_banner')) {
+            $data['hero_banner_path'] = $request->file('hero_banner')->store('poojas/banners', 'public');
+        }
+
+        Pooja::create($data);
 
         return redirect()->route('admin.poojas.index')->with('success', 'Pooja created successfully.');
     }
@@ -73,35 +93,52 @@ class PoojaController extends Controller
      */
     public function update(Request $request, Pooja $pooja)
     {
-        // Complete validation rules for all fields
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'title_hi' => 'nullable|string|max:255',
             'description' => 'required|string',
+            'description_hi' => 'nullable|string',
+            'brief_description' => 'nullable|string|max:255',
+            'brief_description_hi' => 'nullable|string|max:255',
             'price_pandit_samagri' => 'required|integer|min:0',
             'price_pandit_only' => 'required|integer|min:0',
             'price_samagri_only' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'hero_banner' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
         ]);
 
-        // Regenerate the slug if the title has changed
+        $data = [
+            'title' => $validated['title'],
+            'title_hi' => $validated['title_hi'] ?? null,
+            'description' => $validated['description'],
+            'description_hi' => $validated['description_hi'] ?? null,
+            'brief_description' => $validated['brief_description'] ?? null,
+            'brief_description_hi' => $validated['brief_description_hi'] ?? null,
+            'price_pandit_samagri' => $validated['price_pandit_samagri'],
+            'price_pandit_only' => $validated['price_pandit_only'],
+            'price_samagri_only' => $validated['price_samagri_only'],
+        ];
+
         if ($request->title !== $pooja->title) {
-            $validated['slug'] = Str::slug($validated['title']);
+            $data['slug'] = Str::slug($validated['title']);
         }
 
-        // Handle the file upload if a new image is provided
         if ($request->hasFile('image')) {
-            // Delete the old image if it exists to save space
             if ($pooja->image_path) {
                 Storage::disk('public')->delete($pooja->image_path);
             }
-            // Store the new image and get its path
-            $validated['image_path'] = $request->file('image')->store('poojas', 'public');
+            $data['image_path'] = $request->file('image')->store('poojas', 'public');
         }
 
-        // Update the pooja model with the validated data
-        $pooja->update($validated);
+        if ($request->hasFile('hero_banner')) {
+            if ($pooja->hero_banner_path) {
+                Storage::disk('public')->delete($pooja->hero_banner_path);
+            }
+            $data['hero_banner_path'] = $request->file('hero_banner')->store('poojas/banners', 'public');
+        }
 
-        // Redirect back to the index page with a success message
+        $pooja->update($data);
+
         return redirect()->route('admin.poojas.index')->with('success', 'Pooja updated successfully.');
     }
 
@@ -110,6 +147,13 @@ class PoojaController extends Controller
      */
     public function destroy(Pooja $pooja)
     {
+        // Optionally delete images from storage
+        if ($pooja->image_path) {
+            Storage::disk('public')->delete($pooja->image_path);
+        }
+        if ($pooja->hero_banner_path) {
+            Storage::disk('public')->delete($pooja->hero_banner_path);
+        }
         $pooja->delete();
         return redirect()->route('admin.poojas.index')->with('success', 'Pooja deleted successfully.');
     }

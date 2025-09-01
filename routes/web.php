@@ -55,6 +55,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
 });
 
+Route::get('/pooja-packages/{pooja:slug}', [BookingController::class, 'create'])->name('bookings.create');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,3 +80,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Locale Setting Route
+|--------------------------------------------------------------------------
+*/
+Route::post('/set-locale', function (Request $request) {
+    $locale = request()->input('locale', 'en');
+    session(['locale' => $locale]);
+    return back();
+})->name('setLocale');

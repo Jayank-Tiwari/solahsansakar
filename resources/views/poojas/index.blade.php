@@ -26,18 +26,13 @@
                         </div>
 
                         <div class="px-6 pb-6 bg-gray-50 border-t border-gray-200">
-                            <form action="{{ route('bookings.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="pooja_id" value="{{ $pooja->id }}">
-
-                                <button type="submit"
-                                    class="w-full mt-4 text-center bg-ss-saffron text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-600 transition duration-300">
-                                    Book This Pooja
-                                </button>
-                                <div class="text-center text-sm text-ss-brown mt-3">
-                                    <span>Starts at ₹{{ $pooja->price_pandit_only / 100 }}</span>
-                                </div>
-                            </form>
+                            <a href="{{ route('bookings.create', ['pooja' => $pooja->slug]) }}"
+                               class="w-full mt-4 text-center bg-ss-saffron text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-600 transition duration-300 block">
+                                Book This Pooja
+                            </a>
+                            <div class="text-center text-sm text-ss-brown mt-3">
+                                <span>Starts at ₹{{ $pooja->price_pandit_only / 100 }}</span>
+                            </div>
                         </div>
                     </div>
                 @empty
