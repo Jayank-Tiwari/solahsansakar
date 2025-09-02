@@ -4,5 +4,13 @@
     "Name": "Name",
     "Email": "Email",
     "Phone": "Phone",
-    "Confirm Booking": "Confirm Booking"
+    "Address": "Address",
+    "Pincode": "Pincode",
+    "Confirm Booking": "Confirm Booking",
+    "About this Pooja": "About this Pooja",
+    "Select Booking Type": "Select Booking Type",
+    "Pooja Samagri + Pandit": "Pooja Samagri + Pandit",
+    "Pandit Only": "Pandit Only",
+    "Samagri Only": "Samagri Only",
+    "Total": "Total"
 }

@@ -4,5 +4,12 @@
     "Name": "नाम",
     "Email": "ईमेल",
     "Phone": "फ़ोन",
-    "Confirm Booking": "बुकिंग पुष्टि करें"
+    "Address": "पता",
+    "Pincode": "पिनकोड",
+    "Confirm Booking": "बुकिंग पुष्टि करें",
+    "About this Pooja": "इस पूजा के बारे में",
+    "Select Booking Type": "बुकिंग प्रकार चुनें",
+    "Pooja Samagri + Pandit": "पूजा सामग्री + पंडित",
+    "Pandit Only": "केवल पंडित",
+    "Samagri Only": "केवल सामग्री"
 }
